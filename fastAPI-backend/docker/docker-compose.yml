@@ -1,0 +1,70 @@
+version: '3.9'
+
+services:
+  # PostgreSQL 18 Database
+  postgres:
+    image: postgres:18-alpine
+    container_name: tenant_postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tenant_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tenant_secure_password_123}
+      POSTGRES_DB: ${POSTGRES_DB:-tenant_db}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tenant_admin} -d ${POSTGRES_DB:-tenant_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tenant_network
+
+  # FastAPI Application
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: tenant_api
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-tenant_admin}:${POSTGRES_PASSWORD:-tenant_secure_password_123}@postgres:5432/${POSTGRES_DB:-tenant_db}
+      - APP_ENV=${APP_ENV:-development}
+      - DEBUG=${DEBUG:-true}
+      - SECRET_KEY=${SECRET_KEY:-your-super-secret-key}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ../app:/app/app:ro
+    networks:
+      - tenant_network
+
+  # pgAdmin (Optional - for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: tenant_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@tenant.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - tenant_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  tenant_network:
+    driver: bridge
