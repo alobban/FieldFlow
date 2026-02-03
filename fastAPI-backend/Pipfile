@@ -4,11 +4,36 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = {extras = ["standard"], version = "*"}
-uvicorn = {extras = ["standard"], version = "*"}
-sqlalchemy = {extras = ["asyncio"], version = "*"}
+fastapi = ">=0.128.0"
+uvicorn = {extras = ["standard"], version = ">=0.40.0"}
+pydantic = ">=2.12.5"
+pydantic-settings = ">=2.12.0"
+sqlalchemy = {extras = ["asyncio"], version = ">=2.0.46"}
+asyncpg = ">=0.31.0"
+alembic = ">=1.17.2"
+python-dotenv = ">=1.2.1"
+passlib = {extras = ["bcrypt"], version = ">=1.7.4"}
+python-jose = {extras = ["cryptography"], version = ">=3.3.0"}
+email-validator = ">=2.3.0"
+python-multipart = ">=0.0.20"
+httpx = ">=0.28.1"
 
 [dev-packages]
+pytest = ">=8.0.0"
+pytest-asyncio = ">=0.23.0"
+pytest-cov = ">=4.1.0"
+black = ">=24.1.0"
+isort = ">=5.13.0"
+mypy = ">=1.8.0"
+ruff = ">=0.2.0"
 
 [requires]
 python_version = "3.14"
+
+[scripts]
+dev = "uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
+test = "pytest -v --cov=app tests/"
+lint = "ruff check app/"
+format = "black app/ && isort app/"
+migrate = "alembic upgrade head"
+migration = "alembic revision --autogenerate -m"
