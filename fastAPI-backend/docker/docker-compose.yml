@@ -1,9 +1,9 @@
 version: '3.9'
 
 services:
-  # PostgreSQL 18 Database
+  # PostgreSQL 18 Database - Migrated to DHI
   postgres:
-    image: postgres:18-alpine
+    image: dhi.io/postgres:18-alpine3.22
     container_name: tenant_postgres_db
     restart: unless-stopped
     environment:
@@ -24,7 +24,7 @@ services:
     networks:
       - tenant_network
 
-  # FastAPI Application
+  # FastAPI Application - Migrated to DHI
   api:
     build:
       context: ..

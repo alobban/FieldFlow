@@ -1,5 +1,7 @@
-# Multi-stage build for Python 3.14 FastAPI application
-FROM python:3.14-slim as base
+#syntax=docker/dockerfile:1
+
+# === Build stage: Install dependencies ===
+FROM dhi.io/python:3.14-alpine3.23-dev AS builder
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -10,12 +12,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
+# Install system dependencies for building
+RUN apk add --no-cache \
+    build-base \
     libpq-dev \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+    curl
 
 # Install pipenv
 RUN pip install --upgrade pip pipenv
@@ -24,8 +25,8 @@ RUN pip install --upgrade pip pipenv
 COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system --deploy --ignore-pipfile
 
-# Production stage
-FROM python:3.14-slim as production
+# === Final Production stage: Create minimal runtime image ===
+FROM dhi.io/python:3.14-alpine3.23-dev
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -33,26 +34,17 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR $APP_HOME
 
-# Install runtime dependencies only
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq5 \
-    && rm -rf /var/lib/apt/lists/*
+# Install only runtime dependencies
+RUN apk add --no-cache libpq
 
-# Copy installed packages from base
-COPY --from=base /usr/local/lib/python3.14/site-packages /usr/local/lib/python3.14/site-packages
-COPY --from=base /usr/local/bin /usr/local/bin
+# Copy Python packages from builder
+COPY --from=builder /opt/python/lib/python3.14/site-packages /opt/python/lib/python3.14/site-packages
 
 # Copy application code
 COPY ./app ./app
-COPY ./alembic ./alembic
-COPY ./alembic.ini ./
 
-# Create non-root user
-RUN addgroup --system --gid 1001 appgroup && \
-    adduser --system --uid 1001 --gid 1001 appuser && \
-    chown -R appuser:appgroup $APP_HOME
-
-USER appuser
+# Ensure proper permissions for non-root user (runs as gid 1000, uid 1000 by default in DHI)
+RUN chown -R 1000:1000 $APP_HOME
 
 EXPOSE 8000
 
