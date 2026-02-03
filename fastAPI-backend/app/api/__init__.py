@@ -1,0 +1,10 @@
+"""
+REST API layer.
+
+Provides standard REST API endpoints for programmatic access.
+Versioned under /api/v1.
+"""
+
+from app.api.v1.router import router as api_v1_router
+
+__all__ = ["api_v1_router"]
