@@ -17,6 +17,7 @@ python-jose = {extras = ["cryptography"], version = ">=3.3.0"}
 email-validator = ">=2.3.0"
 python-multipart = ">=0.0.20"
 httpx = ">=0.28.1"
+psycopg2-binary = ">=2.9.11"
 
 [dev-packages]
 pytest = ">=8.0.0"
