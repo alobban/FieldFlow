@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   # PostgreSQL 18 Database - Migrated to DHI
   postgres:
@@ -10,7 +8,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-tenant_admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tenant_secure_password_123}
       POSTGRES_DB: ${POSTGRES_DB:-tenant_db}
-      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
