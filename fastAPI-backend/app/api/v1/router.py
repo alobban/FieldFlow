@@ -13,7 +13,6 @@ from app.api.v1.auth import router as auth_router
 
 # Main API v1 router
 router = APIRouter(
-    prefix="/v1",
     responses={
         400: {"description": "Bad Request"},
         401: {"description": "Unauthorized"},

@@ -12,7 +12,6 @@ from app.bff.web.onboarding_controller import router as onboarding_router
 
 # Main Web BFF router
 router = APIRouter(
-    prefix="/web",
     tags=["Web BFF"],
     responses={
         400: {"description": "Bad Request"},
