@@ -24,6 +24,19 @@ cd fastAPI-backend
 pipenv install
 ```
 
+### Run Lint
+After all packages have been installed, you can run lint inside Virtualenv. So first activate venv, if not already.
+```bash
+pipenv shell
+pipenv run lint
+```
+
+### Run Test
+To run available tests, within the venv, run the following command:
+```bash
+pipenv run test
+```
+
 ## Run API
 ### Postgres Database
 First lets get the database up and running. Ensure that the environment variables are loaded in **.env** file.
