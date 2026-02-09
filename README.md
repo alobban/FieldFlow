@@ -23,3 +23,10 @@ Install the packages listed in the `Pipfile` file by running the following comma
 cd fastAPI-backend
 pipenv install
 ```
+
+## Run API
+### Postgres Database
+First lets get the database up and running. Ensure that the environment variables are loaded in **.env** file.
+```bash
+docker-compose --env-file ../.env up -d
+```
