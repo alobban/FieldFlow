@@ -40,6 +40,9 @@ RUN apk add --no-cache libpq
 # Copy Python packages from builder
 COPY --from=builder /opt/python/lib/python3.14/site-packages /opt/python/lib/python3.14/site-packages
 
+# ✅ Copy executable scripts (uvicorn, alembic, etc.)
+COPY --from=builder /opt/python/bin /opt/python/bin
+
 # Copy application code
 COPY ./app ./app
 

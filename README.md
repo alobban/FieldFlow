@@ -3,6 +3,13 @@ Sport League System is an app that manages sports leagues, matches and pickups.
 
 ## Requirements
 
+### Docker
+**NOTE**: PGADMIN_EMAIL has to be of a valid email format else PG Admin won't start reliably and will be in an endless loop of restarts.
+```bash
+docker-compose --env-file ../.env build --no-cache
+docker-compose --env-file ../.env up -d
+```
+
 ### Pipenv
 Automatically install and manage packages with **pipenv** package. Two options install `Pipenv`:
 
