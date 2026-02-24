@@ -23,6 +23,8 @@ pip install pipenv
 - Automatically generate VirtualEnv with the installation of **pipenv**
 ```bash
 pip install --user pipenv
+pipenv install
+pipenv shell #Activate project's Virtualenv
 ```
 ### Install Packages
 Install the packages listed in the `Pipfile` file by running the following commands:
