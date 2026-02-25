@@ -1,3 +1,5 @@
+name: sport_league_system
+  # This is the Docker Compose configuration for the FastAPI backend of the Sport League System.
 services:
   # PostgreSQL 18 Database - Migrated to DHI
   postgres:
