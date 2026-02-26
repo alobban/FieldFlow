@@ -114,7 +114,7 @@ class TenantRepository(BaseRepository[Tenant]):
                 Tenant.status.in_([
                     TenantStatus.ACTIVE,
                     TenantStatus.TRIAL,
-                    TenantStatus.PENDING_SETUP,
+                    # TenantStatus.PENDING_SETUP,
                 ])
             )
         
