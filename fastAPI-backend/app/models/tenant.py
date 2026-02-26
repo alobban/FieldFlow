@@ -45,7 +45,7 @@ class Tenant(Base, UUIDMixin, TimestampMixin):
     )
     
     slug: Mapped[str] = mapped_column(
-        String(100),
+        String(10),
         nullable=False,
         unique=True,
     )

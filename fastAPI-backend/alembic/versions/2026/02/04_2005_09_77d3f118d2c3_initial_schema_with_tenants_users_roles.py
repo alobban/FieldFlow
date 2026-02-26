@@ -36,7 +36,7 @@ def upgrade() -> None:
     op.create_index('ix_roles_name', 'roles', ['name'], unique=True)
     op.create_table('tenants',
     sa.Column('business_name', sa.String(length=255), nullable=False),
-    sa.Column('slug', sa.String(length=100), nullable=False),
+    sa.Column('slug', sa.String(length=10), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('contact_email', sa.String(length=255), nullable=True),
     sa.Column('contact_phone', sa.String(length=50), nullable=True),
